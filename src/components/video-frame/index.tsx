@@ -26,7 +26,7 @@ export const VideoFrame = () => {
       <button onClick={takePhoto}>Take a picture</button>
       {photo && <button onClick={clearPicture}>Clear picture</button>}
 
-      <canvas className='canvas' ref={canvasRef}></canvas>
+      <canvas className='canvas' ref={canvasRef} width={videoRef.current?.videoWidth || 500} height={videoRef.current?.videoHeight || 400} ></canvas>
       <PhotoFrame photo={photo} />
     </div>
   );

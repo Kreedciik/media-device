@@ -1,17 +1,19 @@
 import { RefObject, useEffect, useRef, useState } from "react";
 
+type ReturnVoid = () => void;
+type VideoReturnType = [
+  RefObject<HTMLVideoElement>,
+  RefObject<HTMLCanvasElement>,
+  ReturnVoid,
+  ReturnVoid,
+  ReturnVoid,
+  ReturnVoid,
+  string
+];
 let cameraStream: MediaStream | null = null;
 export const useShowVideo = (
   constraints: MediaStreamConstraints
-): [
-  RefObject<HTMLVideoElement>,
-  RefObject<HTMLCanvasElement>,
-  () => void,
-  () => void,
-  () => void,
-  () => void,
-  string
-] => {
+): VideoReturnType => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [photo, setPhoto] = useState("");
@@ -55,12 +57,6 @@ export const useShowVideo = (
       }
     });
   };
-
-  //   useEffect(() => {
-  //     return () => {
-  //       cameraStream = null;
-  //     };
-  //   }, []);
 
   return [
     videoRef,

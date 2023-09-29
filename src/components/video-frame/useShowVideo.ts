@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useRef, useState } from "react";
 
 type ReturnVoid = () => void;
 type VideoReturnType = [
@@ -47,15 +47,33 @@ export const useShowVideo = (
   };
 
   const startCamera = () => {
-    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
-      cameraStream = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.onloadedmetadata = (e) => {
-          videoRef.current?.play();
-        };
-      }
-    });
+    if (navigator?.mediaDevices && navigator?.mediaDevices?.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then((stream) => {
+          cameraStream = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            videoRef.current.onloadedmetadata = (e) => {
+              videoRef.current?.play();
+            };
+          }
+        })
+        .catch((error) => {
+          alert("Error: " + error.name);
+          if (error.name === "OverconstrainedError") {
+            alert(`The resolution is not supported by your device.`);
+          } else if (error.name === "NotAllowedError") {
+            alert(
+              "You need to grant this page permission to access your camera and microphone."
+            );
+          } else {
+            alert(`getUserMedia error: ${error.name} ` + error);
+          }
+        });
+    } else {
+      alert("navigator.mediaDevices: " + navigator?.mediaDevices);
+    }
   };
 
   return [
